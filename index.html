@@ -1,333 +1,111 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>미세연 휴대폰</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-button{font:inherit}
-body{font:16px/1.9 -apple-system,"SF Pro Text","Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:#f3efe8;color:#222;padding:56px 22px}
-.story{max-width:540px;margin:auto}.story h1{font-size:24px;margin-bottom:20px}.story p{margin-bottom:16px}.story a{color:#2a5bd7;font-weight:600}
-#ov{position:fixed;inset:0;background:rgba(10,10,14,.75);display:flex;align-items:center;justify-content:center;z-index:9;opacity:0;pointer-events:none;transition:opacity .3s}
-#ov.on{opacity:1;pointer-events:auto}
-#x{position:absolute;top:12px;right:14px;width:36px;height:36px;border:0;border-radius:50%;background:#fff;font-size:17px;cursor:pointer;z-index:10}
-/* 기기 */
-#ph{height:min(866px,calc(100dvh - 64px));aspect-ratio:412/866;background:#0b0b0d;border-radius:62px;padding:11px;position:relative;box-shadow:0 0 0 2px #3a3a3e,0 30px 80px #000a;font-family:-apple-system,"SF Pro Text","Apple SD Gothic Neo","Noto Sans KR",sans-serif;line-height:1.3}
-#sc{position:relative;width:100%;height:100%;border-radius:51px;overflow:hidden;background:#000}
-#sc{container-type:inline-size}
-#scr{position:absolute;inset:0;overflow:hidden;--icon:60;--s:calc(100cqw/390)}
-#sb{position:absolute;top:0;left:0;right:0;height:54px;padding:4px 32px 0 48px;display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:16px;z-index:3;pointer-events:none;color:#000}
-#sb i{display:flex;gap:6px;align-items:center;font-style:normal}#sb svg{fill:currentColor}
-#scr.lt~#sb{color:#fff}
-#isl{position:absolute;top:11px;left:50%;margin-left:-60px;width:120px;height:34px;border-radius:20px;background:#000;z-index:4}
-#hi{position:absolute;bottom:0;left:0;right:0;height:34px;z-index:5;cursor:pointer}
-#hi::after{content:"";position:absolute;bottom:8px;left:50%;margin-left:-67px;width:134px;height:5px;border-radius:3px;background:#000}
-#scr.lt~#hi::after{background:#fff}
-@media(max-width:500px){#ph{width:100vw;height:calc(100dvh - 52px);aspect-ratio:auto;padding:0;border-radius:0;box-shadow:none}#sc{border-radius:0}#isl{display:none}#sb{padding:4px 22px 0 28px}}
-/* 홈 화면 */
-.home{padding:calc(66*var(--s)) calc(27*var(--s)) 0;background:radial-gradient(120% 70% at 15% 8%,#ff9a8b,transparent 60%),radial-gradient(110% 70% at 95% 35%,#5b7bff,transparent 60%),linear-gradient(#2a2a72,#a24bc2 60%,#ff8a7a);color:#fff}
-.wgw{text-align:center;font-size:calc(11*var(--s));margin-bottom:calc(22*var(--s))}
-.wg{display:grid;grid-template-columns:1fr 1.3fr;gap:10px;height:calc(158*var(--s));background:#fffffff2;color:#000;border-radius:calc(24*var(--s));padding:calc(14*var(--s));text-align:left;margin-bottom:6px;cursor:pointer}
-.wg small{color:#ff3b30;font-weight:600;font-size:13px;display:block}.wg strong{font-size:50px;font-weight:300;line-height:1.1;display:block}
-.wg ul{list-style:none;font-size:12px;border-left:.5px solid #c6c6c8;padding-left:10px;overflow:hidden}
-.wg li{padding-left:8px;border-left:3px solid;margin-bottom:8px;font-weight:600;line-height:1.3}.wg li span{display:block;color:#8e8e93;font-weight:400;font-size:11px}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);row-gap:calc(22*var(--s))}
-.a{text-align:center;font-size:calc(11*var(--s));cursor:pointer}.a span{display:block;margin-top:5px;text-shadow:0 1px 3px #0005}
-.ic{width:calc(var(--icon)*var(--s));height:calc(var(--icon)*var(--s));border-radius:22.4%;margin:0 auto;overflow:hidden}.ic svg{width:100%;height:100%;display:block}
-.cl{text-align:center;color:#000;padding-top:calc(6*var(--s))}.cl small{display:block;color:#ff3b30;font-size:calc(10*var(--s));font-weight:600}.cl b{display:block;font-size:calc(34*var(--s));font-weight:300;line-height:1.05}
-.pd{position:absolute;bottom:calc(130*var(--s));left:0;right:0;display:flex;justify-content:center;gap:8px}.pd i{width:7px;height:7px;border-radius:50%;background:#fff6}.pd i:first-child{background:#fff}
-.dock{position:absolute;left:calc(14*var(--s));right:calc(14*var(--s));bottom:calc(26*var(--s));height:calc(92*var(--s));background:#ffffff42;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-radius:36px;display:grid;grid-template-columns:repeat(4,1fr);align-items:center}
-.dock .a span{display:none}
-/* 앱 공통 */
-.app{background:#fff;color:#000;display:flex;flex-direction:column;padding-top:54px}
-.gp{background:#f2f2f7}
-.nv{height:44px;flex:none;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 16px;color:#0a84ff;font-size:17px}
-.nv .bk{background:0;border:0;color:inherit;cursor:pointer;display:flex;align-items:center;gap:5px;margin-left:-4px}
-.nv>b{color:#000;font-weight:600;text-align:center;font-size:17px}.nv .r{text-align:right}
-.body{flex:1;overflow-y:auto;padding-bottom:40px}
-.body h1{font-size:34px;font-weight:700;padding:0 16px 8px;line-height:1.2}
-.tb{flex:none;height:84px;padding-top:7px;display:flex;justify-content:space-around;background:#f9f9f9;border-top:.5px solid #0003;color:#8e8e93;font-size:10px}
-.tb>div{width:64px;text-align:center}
-.tb svg{width:26px;height:26px;display:block;margin:0 auto 2px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.tb .on{color:#0a84ff}
-.fl .c+.c::before,.g .c+.c::before{content:"";position:absolute;top:0;left:var(--sl,16px);right:0;border-top:.5px solid #c6c6c8}
-.c{display:flex;align-items:center;gap:12px;padding:10px 16px;position:relative;cursor:pointer;min-height:44px}
-.t1{font-size:17px}.t2{font-size:15px;color:#8e8e93}.gr{color:#8e8e93;font-size:15px;margin-left:auto;white-space:nowrap}.red{color:#ff3b30}
-.av{width:48px;height:48px;border-radius:50%;background:linear-gradient(#a5abb8,#858a96);color:#fff;display:grid;place-items:center;font-size:21px;flex:none}.av.s{width:40px;height:40px;font-size:17px}
-.ud{position:absolute;left:8px;top:18px;width:10px;height:10px;border-radius:50%;background:#0a84ff}
-.cl2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.top{align-self:flex-start}
-.inf{display:inline-grid;place-items:center;width:20px;height:20px;border:1.5px solid #0a84ff;border-radius:50%;color:#0a84ff;font-style:italic;font-size:12px;margin-left:8px}
-.seg{display:inline-flex;background:#e3e3e8;border-radius:9px;padding:2px}.seg span{padding:3px 14px;font-size:14px;font-weight:600;border-radius:7px;color:#000}.seg span:first-child{background:#fff}
-/* 메일 */
-.mh{display:flex;gap:8px}.mh b{font-size:17px}.t1s{font-size:15px}
-.md{padding:8px 18px}.md h2{font-size:22px;margin-bottom:14px}.mf{display:flex;gap:10px;align-items:center;margin-bottom:16px}.md p{font-size:16px;line-height:1.5}
-.ml{justify-content:center;font-size:12px;color:#000;padding-top:14px}
-/* 캘린더 */
-.cal .nv{color:#ff3b30}.cb span{color:#ff3b30;font-size:17px;padding-top:4px}.cb{background:#f9f9f9}
-.wk,.cg{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;padding:0 8px}.wk b{font-size:11px;color:#8e8e93;font-weight:500;padding:4px 0}
-.cg span{height:46px;border-top:.5px solid #c6c6c8;padding-top:4px;position:relative}
-.cg em{font-style:normal;font-size:17px;display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%}.td em{background:#ff3b30;color:#fff}
-.cg u{position:absolute;left:50%;bottom:4px;width:6px;height:6px;border-radius:50%;margin-left:-3px}
-.bar{width:4px;height:36px;border-radius:2px;flex:none}
-/* 시계·사진 (다크) */
-.dk{background:#000;color:#fff}.dk .nv>b{color:#fff}.dk .tb{background:#1c1c1ee6;border-color:#fff2}.dk .t2{color:#98989d}
-.or .nv,.or .tb .on{color:#ff9f0a}.or .c+.c::before{border-color:#38383a}
-.tm{margin-left:auto;font-size:46px;font-weight:200}.tm small{font-size:24px;margin-right:4px}.ct{font-size:28px;font-weight:400}
-.ph{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}.ph div{aspect-ratio:1;cursor:pointer}.big2{aspect-ratio:1}.cap{padding:14px 16px;font-size:15px}
-/* 날씨 */
-.wxv{background:linear-gradient(#2f6fd8,#6fb1ec 60%,#a8d4f5);color:#fff}
-.wh{text-align:center;padding:12px 0 24px;font-size:17px}.wc{font-size:34px}.wt{font-size:96px;font-weight:200;line-height:1.1}
-.card{margin:0 16px 12px;padding:12px 14px;background:#ffffff33;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:16px}
-.ch{font-size:13px;color:#ffffffcc;border-bottom:.5px solid #fff5;padding-bottom:8px;margin-bottom:8px}
-.hrs{display:flex;gap:22px;overflow-x:auto;text-align:center;font-size:15px;line-height:1.7}
-.dy{display:grid;grid-template-columns:56px 30px 34px 1fr 34px;gap:8px;align-items:center;padding:8px 0;border-top:.5px solid #fff4;font-size:17px}.dy small{font-size:17px;color:#ffffffaa;text-align:right}
-.rg{height:5px;border-radius:3px;background:#0003;position:relative;display:block}.rg u{position:absolute;top:0;bottom:0;border-radius:3px;background:linear-gradient(90deg,#7fe0c0,#ffd60a)}
-/* Safari */
-.sfh{padding:16px 20px}.sfh>b{font-size:20px;display:block;margin-bottom:14px}
-.fav{display:grid;grid-template-columns:repeat(4,1fr);gap:16px 6px;text-align:center;font-size:11px}
-.fi{width:60px;height:60px;border-radius:14px;background:#fff;margin:0 auto 6px;display:grid;place-items:center;font-size:24px;font-weight:600;color:#0a84ff}
-.sfb{flex:none;background:#f9f9f9;padding:8px 14px 34px;border-top:.5px solid #0003}
-.url{height:40px;border-radius:12px;background:#e3e3e8;display:flex;align-items:center;justify-content:center;gap:6px;font-size:15px;color:#555}
-.stl{display:flex;justify-content:space-around;margin-top:8px;color:#0a84ff;font-size:30px;height:34px;align-items:center}
-.stl svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.pg{padding:20px 18px}.pg h3{font-size:22px;margin-bottom:12px}.pg p{line-height:1.6}
-/* 메시지 */
-.chat{padding:8px 14px 12px;min-height:100%}.dt{text-align:center;font-size:11px;color:#8e8e93;margin:8px 0 12px}
-.sms .b{max-width:72%;width:fit-content;padding:7px 12px 8px;border-radius:18px;font-size:17px;line-height:1.3;margin-bottom:2px;position:relative}
-.sms .me{margin-left:auto;background:#0a84ff;color:#fff}.sms .them{background:#e9e9eb}
-.sms .tt{margin-bottom:8px}
-.sms .tt::before,.sms .tt::after{content:"";position:absolute;bottom:0;height:18px}
-.sms .me.tt::before{right:-7px;width:20px;background:#0a84ff;border-bottom-left-radius:16px 14px}
-.sms .me.tt::after{right:-26px;width:26px;background:#fff;border-bottom-left-radius:10px}
-.sms .them.tt::before{left:-7px;width:20px;background:#e9e9eb;border-bottom-right-radius:16px 14px}
-.sms .them.tt::after{left:-26px;width:26px;background:#fff;border-bottom-right-radius:10px}
-.rd{text-align:right;font-size:11px;color:#8e8e93;margin:-4px 2px 0}
-.hd{text-align:center;font-size:11px;color:#000;line-height:1.2}.hd .av{margin:2px auto 2px}
-.inb{flex:none;display:flex;gap:10px;align-items:center;padding:8px 12px 34px;background:#fff}
-.inb i{width:32px;height:32px;border-radius:50%;background:#e9e9eb;display:grid;place-items:center;font-style:normal;color:#8e8e93;font-size:22px;flex:none}
-.inb div{flex:1;border:1px solid #d1d1d6;border-radius:18px;padding:5px 14px;color:#c7c7cc;font-size:16px}
-/* 카카오톡 */
-.kkc{background:#b2c7d9}.kkc .nv,.kkc .nv>b{color:#000}.kkc .inb{background:#fff}.kkc .inb i{background:none;color:#666}.kkc .inb div{border:0;background:#f2f2f2;border-radius:6px;color:#999}
-.kr{display:flex;gap:8px;margin:3px 0;align-items:flex-end}.kr.me{justify-content:flex-end}
-.kr .b{max-width:230px;width:fit-content;padding:8px 11px;border-radius:12px;background:#fff;font-size:15px;line-height:1.4}.me .b{background:#fee500}
-.kb{display:flex;gap:5px;align-items:flex-end}.kr small{font-size:10px;color:#444a;white-space:nowrap}.kn{font-size:12px;color:#444;display:block;margin:0 0 3px}
-.ka{width:38px;height:38px;border-radius:15px;background:#c8ccd4;color:#fff;display:grid;place-items:center;flex:none;align-self:flex-start}.ka.n{background:none}
-.kl .ka{width:50px;height:50px;border-radius:19px;font-size:20px;background:#c3c8d2}.kt .tb .on{color:#000}.kt .tb{background:#fff}
-.bd{background:#ff3b30;color:#fff;font-size:11px;font-weight:600;border-radius:9px;padding:1px 6px;display:inline-block;margin-top:4px}
-/* 부드러운 동작 */
-#ph{transform:translateY(28px) scale(.96);transition:transform .55s cubic-bezier(.32,.72,0,1)}#ov.on #ph{transform:none}
-.ly{position:absolute;inset:0;overflow:hidden;will-change:transform}
-#sb{transition:color .3s}
-.ic{transition:transform .18s,filter .18s}.a:active .ic{transform:scale(.9);filter:brightness(.78)}
-.wg{transition:transform .18s}.wg:active{transform:scale(.97)}
-.c:active{background:#d9d9de}.dk .c:active{background:#1c1c1e}
-.nv .bk:active,.tb>div:active,.fav>div:active{opacity:.4}
-.ph div:active,.tb span:active{opacity:.7}
-.body{-webkit-overflow-scrolling:touch;overscroll-behavior:contain;scrollbar-width:none}.body::-webkit-scrollbar,.hrs::-webkit-scrollbar{display:none}
-.hrs{scrollbar-width:none}
-.nv{border-bottom:.5px solid transparent;transition:border-color .2s}.nv .fd{transition:opacity .15s}
-/* 메시지 입력·알림 */
-.inb input{flex:1;min-width:0;border:1px solid #d1d1d6;border-radius:18px;padding:5px 14px;font:inherit;font-size:16px;outline:0;background:#fff;color:#000}
-.inb button{width:30px;height:30px;border-radius:50%;border:0;background:#0a84ff;color:#fff;font-size:18px;flex:none;cursor:pointer}
-.inb input:placeholder-shown+button{display:none}
-.kkc .inb input{border:0;background:#f2f2f2;border-radius:6px}.kkc .inb button{background:#fee500;color:#000;border-radius:6px}
-.b.new{animation:popin .28s cubic-bezier(.2,.9,.3,1.25)}.sms .me.new{transform-origin:100% 100%}.sms .them.new{transform-origin:0 100%}
-@keyframes popin{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
-.ty{display:flex;gap:4px;align-items:center;height:34px}.sms .b.ty{padding:0 14px}.kr .b.ty{height:34px}
-.ty i{width:8px;height:8px;border-radius:50%;background:#8e8e93;animation:bl 1.2s infinite}.ty i:nth-child(2){animation-delay:.2s}.ty i:nth-child(3){animation-delay:.4s}
-@keyframes bl{0%,60%,100%{opacity:.3}30%{opacity:1}}
-.a{position:relative}
-.bdg{position:absolute;top:calc(-6*var(--s));left:50%;margin-left:calc(var(--icon)*var(--s)/2 - 12*var(--s));min-width:calc(22*var(--s));height:calc(22*var(--s));padding:0 6px;border-radius:12px;background:#ff3b30;color:#fff;font:600 calc(14*var(--s))/1 -apple-system,sans-serif;font-style:normal;display:grid;place-items:center;z-index:2}
-#ntf{position:absolute;top:10px;left:10px;right:10px;z-index:6;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:26px;background:#f5f5f7e6;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:#000;box-shadow:0 8px 30px #0004;transform:translateY(-150%);transition:transform .5s cubic-bezier(.32,.72,0,1);cursor:pointer;line-height:1.3}
-#ntf.on{transform:none}#ntf .ic{width:38px;height:38px;flex:none}#ntf .nt{flex:1;min-width:0;font-size:14px}#ntf .nt b{display:block}
-#ntf .nt span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:#333}#ntf small{color:#8e8e93;font-size:11px;align-self:flex-start}
-</style>
-</head>
-<body>
-<div class="story" id="story"></div>
+/* =====================================================
+   이 파일만 고치면 됩니다. (index.html은 건드리지 않아도 돼요)
+   - STORY   : 첫 화면에 보이는 글. data-phone="이름" 링크를 누르면 그 폰이 열려요.
+   - PHONES  : 인물별 휴대폰 내용. 쓰지 않는 항목은 지워도 됩니다(빈 화면으로 보여요).
+   - wallpaper: 홈 화면 배경 사진 주소(예: 'photos/bg.jpg'). 비워 두면 기본 해변 그림이 나와요.
+   - reply   : 내가 메시지를 보내면 상대가 차례대로 한 번씩 보내는 답장 (다 쓰면 더 이상 안 와요)
+   - incoming: 폰을 연 지 N초 뒤에 도착하는 메시지·전화 (알림 배너/수신 화면)
+   인물을 더 추가하려면 seyeon 블록을 복사해 이름을 바꾸고, STORY에 링크를 만드세요.
+   ===================================================== */
 
-<div id="ov">
-  <button id="x" aria-label="닫기">✕</button>
-  <div id="ph"><div id="sc">
-    <div id="scr"></div>
-    <div id="sb"><span id="clk"></span><i>
-      <svg width="18" height="12" viewBox="0 0 18 12"><rect y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" width="3" height="12" rx="1"/></svg>
-      <svg width="17" height="12" viewBox="0 0 16 12"><path d="M8 11.5 5.7 9a3.3 3.3 0 0 1 4.6 0zM2.9 6A7 7 0 0 1 13.1 6l-1.2 1.3a5.2 5.2 0 0 0-7.8 0zM.6 3.6a10.4 10.4 0 0 1 14.8 0L14.2 4.9a8.7 8.7 0 0 0-12.4 0z"/></svg>
-      <svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" style="fill:none;stroke:currentColor;opacity:.4"/><rect x="2" y="2" width="16" height="9" rx="2"/><path d="M24 4.5v4c1-.3 1.7-1.2 1.7-2s-.7-1.7-1.7-2z" opacity=".4"/></svg>
-    </i></div>
-    <div id="isl"></div><div id="ntf"></div><div id="hi"></div>
-  </div></div>
-</div>
+const TITLE='미세연';
 
-<script src="data.js"></script>
-<script>
-const $=s=>document.querySelector(s),scr=$('#scr'),wd=['일','월','화','수','목','금','토'];
-let D,Y,M,Dd,dow;const p2=n=>String(n).padStart(2,'0');
-/* 빠진 항목은 기본값(빈 화면)으로 채웁니다 */
-const DEF={today:'2026-10-19',time:'9:41',events:[],mails:[],world:[['서울',0]],wx:{city:'서울',t:18,d:'맑음',hi:22,lo:11,h:[['지금',18,'☀️']],w:[['오늘',22,11,'☀️']]},photos:[],calls:[],web:[],sms:[],kakao:[]};
-function setPhone(k){D=Object.assign({},DEF,PHONES[k]);[Y,M,Dd]=D.today.split('-').map(Number);dow=new Date(Y,M-1,Dd).getDay();$('#clk').textContent=D.time}
+const STORY=`
+<h1>미세연</h1>
+<p>강의실에 떨어져 있는 <a href="#" data-phone="seyeon">휴대폰</a>을 주웠다.</p>
+<p>화면이 켜져 있었다.</p>
+`;
 
-/* 아이콘 */
-const G={star:'<path d="M12 3l2.7 5.8 6.3.7-4.7 4.3 1.3 6.2L12 17l-5.6 3 1.3-6.2L3 9.5l6.3-.7z"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',person:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7"/>',keypad:'<path d="M6 5h0M12 5h0M18 5h0M6 11h0M12 11h0M18 11h0M6 17h0M12 17h0M18 17h0" stroke-width="3.4"/>',vm:'<circle cx="7" cy="12" r="3.5"/><circle cx="17" cy="12" r="3.5"/><path d="M7 15.5h10"/>',chat:'<path d="M4 5h16v11H11l-5 4v-4H4z"/>',photos:'<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M3 17l5-5 4 4 3-3 6 6"/>',grid:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M16 16l5 5"/>',globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',alarm:'<circle cx="12" cy="13" r="7"/><path d="M12 9v4l3 2M5 4 3 6M19 4l2 2"/>',sw:'<circle cx="12" cy="14" r="7"/><path d="M12 14l3-3M10 3h4"/>',timer:'<circle cx="12" cy="13" r="8"/><path d="M12 8v5h4M10 2h4"/>',dots:'<path d="M5 12h0M12 12h0M19 12h0" stroke-width="3.4"/>',share:'<path d="M12 3v12M8 7l4-4 4 4M6 11H5v10h14V11h-1"/>',book:'<path d="M12 6c-2-1.5-5-2-8-1v14c3-1 6-.5 8 1 2-1.5 5-2 8-1V5c-3-1-6-.5-8 1zM12 6v14"/>',tabs:'<rect x="7" y="7" width="13" height="13" rx="2"/><path d="M4 16V5a1 1 0 011-1h11"/>'};
-const sv=k=>`<svg viewBox="0 0 24 24">${G[k]}</svg>`;
-const tabs=(a,on,c='')=>`<div class="tb ${c}">${a.map(([g,l],i)=>`<div class="${i==on?'on':''}">${sv(g)}${l}</div>`).join('')}</div>`;
-let petals='';['#ff453a','#ff9f0a','#ffd60a','#32d74b','#64d2ff','#0a84ff','#bf5af2','#ff375f'].forEach((c,k)=>petals+=`<ellipse cx="30" cy="19" rx="6" ry="11" fill="${c}" opacity=".8" transform="rotate(${k*45} 30 30)"/>`);
-const IC={
- phone:'<svg viewBox="0 0 60 60"><path transform="translate(14 14) scale(1.4)" fill="#fff" d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg>',
- web:'<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="24" fill="#fff" stroke="#1a8cff" stroke-width="3"/><path d="M41 19 35 35 25 25z" fill="#ff3b30"/><path d="M19 41 25 25 35 35z" fill="#d1d1d6"/></svg>',
- sms:'<svg viewBox="0 0 60 60"><ellipse cx="30" cy="28" rx="20" ry="16" fill="#fff"/><path d="M15 40 11 49 26 43z" fill="#fff"/></svg>',
- mail:'<svg viewBox="0 0 60 60"><rect x="11" y="17" width="38" height="27" rx="4" fill="#fff"/><path d="M12 20 30 34 48 20" stroke="#1a8cff" stroke-width="2.5" fill="none"/></svg>',
- kakao:'<svg viewBox="0 0 60 60"><ellipse cx="30" cy="28" rx="21" ry="16" fill="#3c1e1e"/><path d="M17 40 14 49 27 43z" fill="#3c1e1e"/><text x="30" y="32" font-size="11" font-weight="800" text-anchor="middle" fill="#fee500">TALK</text></svg>',
- clock:'<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="25" fill="#fff"/><path d="M30 9v4M30 47v4M9 30h4M47 30h4" stroke="#000" stroke-width="2.5" stroke-linecap="round"/><path d="M30 30V17M30 30l9 5" stroke="#000" stroke-width="3" stroke-linecap="round"/><path d="M30 30 23 40" stroke="#ff9f0a" stroke-width="1.5"/></svg>',
- wx:'<svg viewBox="0 0 60 60"><circle cx="22" cy="21" r="10" fill="#ffd60a"/><path d="M16 46a9 9 0 0 1 2-18 12 12 0 0 1 23 3 7.5 7.5 0 0 1 0 15z" fill="#fff"/></svg>',
- photo:`<svg viewBox="0 0 60 60">${petals}</svg>`
+const PHONES={
+
+/* ---------- 미세연 ---------- */
+seyeon:{
+ owner:'미세연',
+ today:'2009-10-19', time:'17:24',
+ wallpaper:'',
+ /* 잠금화면: lock:false 로 두면 잠금 없이 바로 홈이 열려요. 암호는 아무 숫자 4개나 눌러도 열려요.
+    widget = 왼쪽 상자(t 제목, v 큰 글씨) — 지우면 다음 일정의 D-day가 나와요 / alarm = 오른쪽 알람 시간 */
+ lock:{widget:{t:'중간고사',v:'D-2'},alarm:'6:00'},
+ /* 일정: s=시작, e=끝(없으면 종일) */
+ events:[
+  {d:'2009-10-19',t:'병리학 과제',c:'#34c759',s:'14:00',e:'16:00'},
+  {d:'2009-10-21',t:'중간고사',c:'#ff3b30',s:'10:00',e:'11:30'},
+  {d:'2009-10-24',t:'선배',c:'#007aff',s:'18:00',e:'20:00'},
+  {d:'2009-10-28',t:'스터디 모임',c:'#af52de',s:'17:00',e:'18:00'},
+  {d:'2009-10-31',t:'본가',c:'#ff9500'}],
+ /* 홈 화면 음악 위젯 (art는 앨범 색 두 가지, url을 누르면 새 탭으로 열려요) */
+ music:{title:'파도',artist:'hathaw9y',art:'#f2a65a,#7a3e65',url:'https://youtu.be/UviolwE2q1M?si=6BCfguD2Vdkwpynm'},
+ /* g = 메모 목록의 묶음 이름(오늘, 이전 7일 …) */
+ notes:[
+  {t:'나간 김에 장 볼 거',body:'햇반, 달걀, 식빵, 사과',g:'오늘'},
+  {t:'오디오북',body:'1시간 34분까지 들었다.',g:'어제'},
+  {t:'세생학 시험 범위',body:'1, 3, 4, 5, 6 + 퀴즈 범위',g:'이전 7일'}],
+ /* Safari 최근 검색어 (없으면 즐겨찾기 이름) */
+ recent:['데이트 장소','남자 향수','영화 말고 괜찮은 데이트 코스','반지','배우 사공설','천호역 바','브런치'],
+ /* 카카오톡 광고 배너 (필요 없으면 지우세요) */
+ ad:{label:'광고',title:'가을 신상 아우터 특가',sub:'모던핏 코트 · 니트 · 머플러',c:'#c58f5a'},
+ mails:[
+  {from:'학교 사무실',sub:'겨울계절학기 수강신청 안내',t:'오전 9:12',un:1,body:'겨울계절학기 수강신청은 10월 24일부터 시작됩니다. 학번과 개설 과목을 미리 확인해 주세요.'},
+  {from:'교보문고',sub:'주문하신 책이 발송되었습니다',t:'어제',body:'주문번호 1234-5678 상품이 발송되었습니다. 배송은 1~2일 걸립니다.'}],
+ world:[['서울',0],['뉴욕',-13],['런던',-9]],
+ wx:{city:'서울',t:18,d:'맑음',hi:22,lo:11,
+  h:[['지금',18,'☀️'],['11시',20,'☀️'],['12시',21,'⛅'],['1시',22,'⛅'],['2시',22,'☁️'],['3시',21,'☁️']],
+  w:[['오늘',22,11,'☀️'],['화',22,11,'☀️'],['수',20,12,'⛅'],['목',17,10,'🌧️']]},
+ /* 사진: g는 그라데이션 색. 진짜 사진은 src:'photos/1.jpg' 처럼 */
+ photos:[
+  {g:'#f6d365,#fda085',cap:'사공설',date:'5월 1일'},
+  {g:'#84fab0,#8fd3f4',cap:'끝',date:'2007년 4월 3일'},
+  {g:'#a18cd1,#fbc2eb',cap:'사공설 졸업',date:'2006년 12월 31일'},
+  {g:'#ffecd2,#fcb69f',cap:'영화제',date:'2006년 11월 15일'},
+  {g:'#89f7fe,#66a6ff',cap:'태풍',date:'2006년 7월 31일'},
+  {g:'#fddb92,#d1fdff',cap:'사공설',date:'2006년 7월 18일'}],
+ /* 통화 기록: dir 'in'=받음 'out'=건 전화, miss:1=부재중, cnt=연속 횟수 */
+ calls:[
+  {n:'선배',dir:'in',t:'5:20',miss:1},
+  {n:'선배',dir:'in',t:'5:16',miss:1},
+  {n:'형',dir:'in',t:'7:38',cnt:2},
+  {n:'선배',dir:'in',t:'10:24',cnt:2},
+  {n:'070-0000-3158',dir:'in',t:'8:51',miss:1,type:'<스팸의심>'},
+  {n:'어머니',dir:'in',t:'어제'},
+  {n:'형',dir:'in',t:'어제'},
+  {n:'아버지',dir:'out',t:'토요일'},
+  {n:'주승하',dir:'in',t:'토요일',miss:1},
+  {n:'미세은',dir:'out',t:'금요일'}],
+ web:[
+  {t:'학교 홈페이지',u:'school.example.com',body:'이번 학기 중간고사는 10월 21일부터 시작됩니다.'},
+  {t:'날씨 정보',u:'weather.example.com',body:'오늘 서울은 대체로 맑겠습니다.'}],
+ /* 메시지: t=목록에 보이는 시간, un:1=안 읽음 */
+ sms:[
+  {n:'엄마',t:'오후 5:17',un:1,reply:['믿음이 있어야 해.','너 또 이상한 생각하는 거 아니지?','또 영화인지 뭔지 이상한 이야기 해봐.','정신차려.'],msgs:[['them','언제 본가 돌아온다고 했지?'],['me','다음주 토요일이요.'],['them','그래, 돈은 안 모자르고?'],['me','네.']]},
+  {n:'학과 사무실',t:'오전 9:12',un:1,msgs:[['them','[WEB 발신] 겨울계절학기 수강신청 일정이 메일로 안내되었습니다.']]},
+  {n:'택배',t:'어제',msgs:[['them','[택배] 오늘 중 배송 예정입니다.']]},
+  {n:'아버지',t:'10월 8일',msgs:[['them','입금했다.'],['me','감사합니다.']]}],
+ /* 카카오톡 대화: [누가, 내용, 시간(선택)], u=안 읽은 개수, pin:1=고정 */
+ kakao:[
+  {n:'선배',t:'오후 5:10',reply:['ㅋㅋㅋ 알겠어','그럼 4시에 정문에서 봐','늦지 마!'],msgs:[['them','오늘 몇 시에 끝나?','오전 8:48'],['me','4시쯤 끝나요.','오전 8:49'],['them','그럼 정문에서 기다릴게.','오전 8:50'],['me','저 오늘 과제 많은데...','오전 8:50']]},
+  {n:'형',t:'오후 2:10',reply:['밥 잘 챙겨 먹고 있지?','밤 너무 새지 말고.','너 체력 좀 키워야 해.','시간 나면 산책이라도 해, 알겠지?'],msgs:[['them','용돈 보냈어. 아껴 써','오후 2:10'],['me','고마워 형','오후 2:11']]},
+  {n:'과 단톡방',t:'어제',u:3,msgs:[['them','유기화학 시험 공지 올라왔대','오후 6:02'],['them2','헉 확인할게','오후 6:05']]},
+  {n:'미세은',t:'토요일',reply:['말이 짧아','재수 없어','엄마가 전화 좀 하래','몰라 니가 알아서 해'],msgs:[['them','야','오전 7:55'],['me','왜','오전 7:58']]},
+  {n:'주승하',t:'금요일',msgs:[['them','너 시험 언제 끝나?','오후 8:02'],['me','금요일, 왜?','오후 8:10']]}],
+ /* 폰을 연 지 N초 뒤에 도착하는 메시지. app: 'sms' 또는 'kakao', chat: 대화 번호(0부터) */
+ incoming:[
+  /* name = 누가 연락하는지 (연락처 이름과 똑같이). at=몇 초 뒤, app='sms'|'kakao'|'phone', text=내용, line=전화 대사 */
+  /* 선배 → 카톡 */
+  {at:12,app:'kakao',name:'선배',text:'세연아 어디야?'},
+  /* 선배 → 카톡 */
+  {at:15,app:'kakao',name:'선배',text:'아직 강의 안 끝났어?'},
+  /* 엄마 → 문자 */
+  {at:30,app:'sms',name:'엄마',text:'너 요즘 교회 안 나온다더라.'},
+  {at:50,app:'phone',name:'선배',line:['세연아아 왜 카톡 답 안 해ㅠㅠ','우리 영화 보기로 했잖아...','앞에서 계속 기다리고 있을게. 얼른 나와!']},
+  /* 다양한 메시지 (각각 한 번만 와요) */
+  /* 미세은 → 카톡 */
+  {at:80,app:'kakao',name:'미세은',text:'야 너 본가 올 때 저번에 그 빵집에서 타르트 사와.'},
+  /* 형 → 카톡 */
+  {at:105,app:'kakao',name:'형',text:'시험 잘 봐. 파이팅',tex:'슬슬 추워지니까 옷 따뜻하게 입고 다녀.',text:'다음주에 보자.'},
+  /* 택배 → 문자 */
+  {at:130,app:'sms',name:'택배',text:'[WEB 발신] 문 앞에 배송 완료되었습니다.'},
+  /* 주승하 → 카톡 */
+  {at:160,app:'kakao',name:'주승하',text:'설이 형이랑 만나서 술 마시자'}]
+},
+
 };
-const BG={phone:'linear-gradient(#6be07c,#25b43e)',web:'#fff',sms:'linear-gradient(#6be07c,#25b43e)',mail:'linear-gradient(#4db8ff,#1a6dff)',kakao:'#fee500',cal:'#fff',clock:'#000',wx:'linear-gradient(#2f7bf5,#7cc4ff)',photo:'#fff'};
-const APPS=[['kakao','카카오톡'],['cal','캘린더'],['clock','시계'],['wx','날씨'],['photo','사진']],DOCK=[['phone','전화'],['web','Safari'],['sms','메시지'],['mail','메일']];
-const unread=k=>k=='mail'?D.mails.filter(m=>m.un).length:(k=='sms'||k=='kakao'?D[k]:[]).reduce((n,c)=>n+(c.u||(c.un?1:0)),0);
-const ic=([k,l])=>{const n=unread(k);return `<div class="a" data-app="${k}" onclick="A.${k}()"><div class="ic" style="background:${BG[k]}">${k=='cal'?`<div class="cl"><small>${wd[dow]}요일</small><b>${Dd}</b></div>`:IC[k]}</div>${n?`<i class="bdg">${n}</i>`:''}<span>${l}</span></div>`};
-const bg=p=>p.src?`background:url(${p.src}) center/cover`:`background:linear-gradient(135deg,${p.g})`;
-
-/* 화면 전환 (앱 열기·닫기 줌, 좌우 슬라이드) */
-const EZ='cubic-bezier(.32,.72,0,1)';let busy=false,origin=[50,50],ex=null;
-function mk(cls,html,d,t){const e=document.createElement('div');e.className='ly '+cls;e.dataset.d=d;e.dataset.t=t;e.innerHTML=html;return e}
-function show(el,lt){
- const old=scr.querySelector('.ly:last-child');
- scr.classList.toggle('lt',!!lt);
- if(!old){scr.appendChild(el);return}
- const k=old.dataset.t=='home'?'open':el.dataset.t=='home'?'close':+el.dataset.d>+old.dataset.d?'push':+el.dataset.d<+old.dataset.d?'pop':'fade';
- k=='close'||k=='pop'?scr.insertBefore(el,old):scr.appendChild(el);
- busy=true;scr.style.pointerEvents='none';
- const o={duration:k=='open'||k=='close'?450:380,easing:EZ,fill:'both'},og=`${origin[0]}% ${origin[1]}%`,F=[],an=(x,f)=>F.push(x.animate(f,o)),sh='-8px 0 24px rgba(0,0,0,.18)';
- if(k=='open'){el.style.transformOrigin=og;
-  an(el,[{transform:'scale(.16)',opacity:0,borderRadius:'48px'},{opacity:1,offset:.35},{transform:'scale(1)',opacity:1,borderRadius:'0px'}]);
-  an(old,[{transform:'scale(1)',opacity:1},{transform:'scale(1.15)',opacity:0}])}
- else if(k=='close'){old.style.transformOrigin=og;
-  an(old,[{transform:'scale(1)',opacity:1,borderRadius:'0px'},{opacity:0,offset:.7},{transform:'scale(.16)',opacity:0,borderRadius:'48px'}]);
-  an(el,[{transform:'scale(1.15)',opacity:0},{transform:'scale(1)',opacity:1}])}
- else if(k=='push'){el.style.boxShadow=sh;
-  an(el,[{transform:'translateX(100%)'},{transform:'translateX(0)'}]);
-  an(old,[{transform:'translateX(0)',filter:'brightness(1)'},{transform:'translateX(-28%)',filter:'brightness(.88)'}])}
- else if(k=='pop'){old.style.boxShadow=sh;
-  an(old,[{transform:'translateX(0)'},{transform:'translateX(100%)'}]);
-  an(el,[{transform:'translateX(-28%)',filter:'brightness(.88)'},{transform:'translateX(0)',filter:'brightness(1)'}])}
- else an(el,[{opacity:0},{opacity:1}]);
- const end=()=>{old.remove();el.getAnimations().forEach(x=>x.cancel());el.style.boxShadow=el.style.transformOrigin='';busy=false;scr.style.pointerEvents=''};
- Promise.all(F.map(x=>x.finished)).then(end,end);
-}
-const CH='<svg width="12" height="20" viewBox="0 0 12 20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2 2 10l8 8"/></svg>';
-function view(o){
- const el=mk(`app ${o.cls||''}`,`<div class="nv" style="height:${o.nh||44}px"><span>${o.back?`<button class="bk" onclick="${o.back}">${CH}${o.bl||'뒤로'}</button>`:o.l||''}</span><b ${o.lg&&!o.m?'class="fd" style="opacity:0"':''}>${o.m||o.t}</b><span class="r">${o.r||''}</span></div><div class="body">${o.lg?`<h1>${o.t}</h1>`:''}${o.b}</div>${o.tb||''}`,o.d??(o.back?1:0),'app');
- el.dataset.id=o.id||'';const b=el.querySelector('.body'),nv=el.querySelector('.nv'),fd=el.querySelector('.fd');
- if(o.lg)b.onscroll=()=>{const y=b.scrollTop;if(fd)fd.style.opacity=Math.min(1,Math.max(0,(y-28)/18));nv.style.borderBottomColor=y>40?'rgba(128,128,128,.35)':'transparent'};
- show(el,o.lt);
- if(o.sb)b.scrollTop=b.scrollHeight;
-}
-const homeHTML=()=>{const nx=D.events.filter(e=>e.d>=D.today).slice(0,2); return `<div class="wgw"><div class="wg" onclick="A.cal()"><div><small>${wd[dow]}요일</small><strong>${Dd}</strong></div><ul>${nx.map(e=>`<li style="border-color:${e.c}">${e.t}<span>${+e.d.slice(5,7)}월 ${+e.d.slice(8)}일</span></li>`).join('')||'<li style="border-color:#ccc">일정 없음</li>'}</ul></div>캘린더</div><div class="grid">${APPS.map(ic).join('')}</div><div class="pd"><i></i><i></i></div><div class="dock">${DOCK.map(ic).join('')}</div>`};
-function home(){show(mk('home',homeHTML(),0,'home'),true)}
-
-const A={
- mail(i){
-  if(i==null)return view({t:'받은 편지함',lg:1,r:'편집',cls:'',b:`<div class="fl" style="--sl:32px">${D.mails.map((m,k)=>`<div class="c" onclick="A.mail(${k})">${m.un?'<i class="ud"></i>':''}<div style="flex:1;min-width:0;padding-left:8px"><div class="mh"><b>${m.from}</b><span class="gr">${m.t} ›</span></div><div class="t1s">${m.sub}</div><div class="t2 cl2">${m.body}</div></div></div>`).join('')}</div>`,tb:'<div class="tb ml"><span>업데이트: 방금</span></div>'});
-  const m=D.mails[i];m.un=0;
-  view({t:'',back:'A.mail()',bl:'받은 편지함',b:`<div class="md"><h2>${m.sub}</h2><div class="mf"><div class="av s">${m.from[0]}</div><div><b>${m.from}</b><div class="t2">받는 사람: 나</div></div><span class="gr top">${m.t}</span></div><p>${m.body}</p></div>`});
- },
- cal(){
-  const f=new Date(Y,M-1,1).getDay(),n=new Date(Y,M,0).getDate(),pf=`${Y}-${p2(M)}-`;
-  let c='<i></i>'.repeat(f);
-  for(let d=1;d<=n;d++){const ev=D.events.find(e=>e.d==pf+p2(d));c+=`<span class="${d==Dd?'td':''}"><em>${d}</em>${ev?`<u style="background:${ev.c}"></u>`:''}</span>`}
-  const l=D.events.filter(e=>e.d.startsWith(pf)).map(e=>`<div class="c"><i class="bar" style="background:${e.c}"></i><div><div class="t1">${e.t}</div><div class="t2">${M}월 ${+e.d.slice(8)}일 · 종일</div></div></div>`).join('');
-  view({t:`${M}월`,lg:1,l:`${CH.replace('<svg','<svg style="vertical-align:-3px;margin-right:4px"')}${Y}년`,cls:'cal',b:`<div class="wk">${wd.map(d=>`<b>${d}</b>`).join('')}</div><div class="cg">${c}</div><div class="fl" style="margin-top:12px">${l}</div>`,tb:'<div class="tb cb"><span>오늘</span><span>캘린더</span><span>받은 편지함</span></div>'});
- },
- clock(){
-  const [h,m]=D.time.split(':').map(Number);
-  const r=D.world.map(([n,o])=>{const x=h+o,day=x<0?'어제':x>=24?'내일':'오늘',hh=((x%24)+24)%24;
-   return `<div class="c" style="padding:12px 16px"><div><div class="t2">${day}, ${o>=0?'+':''}${o}시간</div><div class="ct">${n}</div></div><div class="tm"><small>${hh<12?'오전':'오후'}</small>${hh%12||12}:${p2(m)}</div></div>`}).join('');
-  view({t:'세계 시계',lg:1,l:'편집',lt:1,cls:'dk or',b:`<div class="fl" style="--sl:16px">${r}</div>`,tb:tabs([['globe','세계 시계'],['alarm','알람'],['sw','스톱워치'],['timer','타이머']],0)});
- },
- wx(){
-  const w=D.wx,lo=Math.min(...w.w.map(x=>x[1])),hi=Math.max(...w.w.map(x=>x[2])),sp=hi-lo+8;
-  view({t:'',lt:1,cls:'wxv',b:`<div class="wh"><div class="wc">${w.city}</div><div class="wt">${w.t}°</div><div>${w.d}</div><div>최고:${w.hi}° 최저:${w.lo}°</div></div><div class="card"><div class="ch">시간별 예보</div><div class="hrs">${w.h.map(x=>`<div>${x[0]}<br>${x[2]}<br>${x[1]}°</div>`).join('')}</div></div><div class="card"><div class="ch">일기 예보</div>${w.w.map(x=>`<div class="dy"><span>${x[0]}</span><span>${x[3]}</span><small>${x[1]}°</small><i class="rg"><u style="left:${(x[1]-lo+4)/sp*100}%;width:${(x[2]-x[1])/sp*100}%"></u></i><span>${x[2]}°</span></div>`).join('')}</div>`});
- },
- photo(i){
-  if(i==null)return view({t:'보관함',lg:1,r:'선택',b:`<div class="ph">${D.photos.map((p,k)=>`<div onclick="A.photo(${k})" style="${bg(p)}"></div>`).join('')}</div>`,tb:tabs([['photos','보관함'],['grid','컬렉션'],['search','검색']],0)});
-  const p=D.photos[i];
-  view({t:p.date,back:'A.photo()',bl:'보관함',cls:'dk',lt:1,b:`<div class="big2" style="${bg(p)}"></div><div class="cap">${p.cap}</div>`});
- },
- phone(){
-  view({t:'최근 기록',lg:1,l:'편집',m:'<span class="seg"><span>전체</span><span>부재중</span></span>',b:`<div class="fl">${D.calls.map(c=>`<div class="c"><div><div class="t1 ${c.miss?'red':''}">${c.n}</div><div class="t2">${c.type}</div></div><span class="gr">${c.t}<i class="inf">i</i></span></div>`).join('')}</div>`,tb:tabs([['star','즐겨찾기'],['clock','최근 기록'],['person','연락처'],['keypad','키패드'],['vm','음성 사서함']],1)});
- },
- web(i){
-  const bar=t=>`<div class="sfb"><div class="url">${t}</div><div class="stl"><span>‹</span><span style="opacity:.35">›</span>${sv('share')}${sv('book')}${sv('tabs')}</div></div>`;
-  if(i==null)return view({t:'',cls:'gp',b:`<div class="sfh"><b>즐겨찾기</b><div class="fav">${D.web.map((w,k)=>`<div onclick="A.web(${k})"><div class="fi">${w.t[0]}</div>${w.t.split(' ')[0]}</div>`).join('')}</div></div>`,tb:bar('검색 또는 웹 사이트 이름 입력')});
-  const w=D.web[i];
-  view({d:1,t:'',b:`<div class="pg"><h3>${w.t}</h3><p>${w.body}</p></div>`,tb:bar(`<svg width="10" height="12" viewBox="0 0 10 12"><rect y="5" width="10" height="7" rx="1.5" fill="#555"/><path d="M2.5 5V3.5a2.5 2.5 0 015 0V5" fill="none" stroke="#555" stroke-width="1.3"/></svg>${w.u}`),l:`<button class="bk" onclick="A.web()">${CH}Safari</button>`});
- },
- sms(i){
-  if(i==null)return view({id:'sms:list',t:'메시지',lg:1,l:'편집',b:`<div class="fl" style="--sl:76px">${D.sms.map((c,j)=>`<div class="c" onclick="A.sms(${j})">${c.u||c.un?'<i class="ud" style="left:3px;top:30px;width:9px;height:9px"></i>':''}<div class="av">${c.n[0]}</div><div style="flex:1;min-width:0"><div class="t1"><b>${c.n}</b></div><div class="t2 cl2">${c.msgs[c.msgs.length-1][1]}</div></div><span class="gr top">${c.t} ›</span></div>`).join('')}</div>`});
-  const c=D.sms[i];c.u=0;c.un=0;
-  view({id:`sms:${i}`,sb:1,m:`<div class="hd"><div class="av s">${c.n[0]}</div>${c.n} ›</div>`,nh:66,back:'A.sms()',bl:'메시지',t:'',tb:`<form class="inb" autocomplete="off" onsubmit="return send('sms',${i},this)"><i>＋</i><input placeholder="iMessage" enterkeyhint="send"><button>↑</button></form>`,b:`<div class="chat sms">${smsH(c)}</div>`});
- },
- kakao(i){
-  if(i==null)return view({id:'kakao:list',t:'채팅',lg:1,cls:'kt kl',r:'⌕ &nbsp;＋',b:`<div class="fl" style="--sl:78px">${D.kakao.map((c,j)=>`<div class="c" onclick="A.kakao(${j})"><div class="ka">${c.n[0]}</div><div style="flex:1;min-width:0"><div class="t1" style="font-size:15px"><b>${c.n}</b></div><div class="t2 cl2" style="font-size:13px">${c.msgs[c.msgs.length-1][1]}</div></div><span class="gr top" style="font-size:11px;text-align:right">${c.t}${c.u?`<br><span class="bd">${c.u}</span>`:''}</span></div>`).join('')}</div>`,tb:tabs([['person','친구'],['chat','채팅'],['dots','더보기']],1)});
-  const c=D.kakao[i];c.u=0;
-  view({id:`kakao:${i}`,sb:1,t:c.n,back:'A.kakao()',bl:' ',cls:'kkc',b:`<div class="chat">${kkH(c)}</div>`,tb:`<form class="inb" autocomplete="off" onsubmit="return send('kakao',${i},this)"><i>＋</i><input placeholder="메시지 입력" enterkeyhint="send"><button>↑</button></form>`});
- }
-};
-
-/* ---- 메시지 보내기·받기 ---- */
-const stamp=()=>{const [h,m]=D.time.split(':').map(Number);return `${h<12?'오전':'오후'} ${h%12||12}:${p2(m)}`};
-const ty='<div class="ty"><i></i><i></i><i></i></div>';
-const smsH=c=>{const L=c.msgs,l=L[L.length-1];return `<div class="dt">오늘 ${D.time}</div>${L.map((m,j)=>`<div class="b ${m[0]}${!L[j+1]||L[j+1][0]!=m[0]?' tt':''}">${m[1]}</div>`).join('')}${c._ty?`<div class="b them tt ty"><i></i><i></i><i></i></div>`:''}${l&&l[0]=='me'?`<div class="rd">${c._ty?'읽음':'전달됨'}</div>`:''}`};
-const kkH=c=>{let pv='';return c.msgs.map((m,j)=>{const nx=c.msgs[j+1],first=m[0]!=pv,last=!nx||nx[0]!=m[0],tm=last&&m[2]?`<small>${m[2]}</small>`:'';pv=m[0];
- return m[0]=='me'?`<div class="kr me">${tm}<div class="b">${m[1]}</div></div>`:`<div class="kr"><div class="ka ${first?'':'n'}">${first?c.n[0]:''}</div><div>${first?`<small class="kn">${c.n}</small>`:''}<div class="kb"><div class="b">${m[1]}</div>${tm}</div></div></div>`}).join('')+(c._ty?`<div class="kr"><div class="ka n"></div><div class="b ty"><i></i><i></i><i></i></div></div>`:'')};
-const cur=()=>scr.querySelector('.ly:last-child');
-function live(k,i,fresh){
- const el=cur();if(!el||el.dataset.id!=`${k}:${i}`)return;
- const ch=el.querySelector('.chat'),b=el.querySelector('.body');
- ch.innerHTML=(k=='sms'?smsH:kkH)(D[k][i]);
- if(fresh){const bs=ch.querySelectorAll('.b:not(.ty)');bs.length&&bs[bs.length-1].classList.add('new')}
- b.scrollTo({top:b.scrollHeight,behavior:'smooth'});
-}
-function send(k,i,f){
- const inp=f.querySelector('input'),t=inp.value.trim();if(!t)return false;
- const c=D[k][i];c.msgs.push(['me',t,stamp()]);c.t=stamp();inp.value='';
- live(k,i,1);
- const r=c.reply;
- if(r&&r.length){const x=r[(c._r=c._r||0)%r.length];c._r++;
-  setTimeout(()=>{c._ty=1;live(k,i)},700);
-  setTimeout(()=>receive(k,i,x),1800+Math.random()*900)}
- return false;
-}
-let ntT;const hideN=()=>$('#ntf').classList.remove('on');
-function notify(k,i,text){
- const n=$('#ntf'),c=D[k][i];
- n.innerHTML=`<div class="ic" style="background:${BG[k]}">${IC[k]}</div><div class="nt"><b>${c.n}</b><span>${text}</span></div><small>지금</small>`;
- n.onclick=()=>{hideN();const a=scr.querySelector(`.a[data-app="${k}"]`),b=scr.getBoundingClientRect();if(a){const q=a.querySelector('.ic').getBoundingClientRect();origin=[(q.left+q.width/2-b.left)/b.width*100,(q.top+q.height/2-b.top)/b.height*100]}A[k](i)};
- n.classList.add('on');clearTimeout(ntT);ntT=setTimeout(hideN,4500);
- navigator.vibrate&&navigator.vibrate(40);
-}
-function receive(k,i,text){
- const c=D[k][i];c._ty=0;c.msgs.push(['them',text,stamp()]);c.t=stamp();
- const el=cur(),open=ov.classList.contains('on');
- if(open&&el&&el.dataset.id==`${k}:${i}`){live(k,i,1);return}
- c.u=(c.u||(c.un?1:0))+1;c.un=0;
- if(open)notify(k,i,text);
- if(el&&el.dataset.id==`${k}:list`)A[k]();
- else if(el&&el.dataset.t=='home')el.innerHTML=homeHTML();
-}
-function sched(key){const P=PHONES[key];if(P._s)return;P._s=1;(P.incoming||[]).forEach(m=>setTimeout(()=>receive(m.app,m.chat,m.text),m.at*1000))}
-const ov=$('#ov');
-$('#story').innerHTML=STORY;document.title=TITLE;
-document.addEventListener('click',e=>{const a=e.target.closest('[data-phone]');if(!a)return;e.preventDefault();if(!PHONES[a.dataset.phone])return;setPhone(a.dataset.phone);sched(a.dataset.phone);ov.classList.add('on');scr.innerHTML='';busy=false;scr.style.pointerEvents='';home()});
-$('#x').onclick=()=>ov.classList.remove('on');
-scr.addEventListener('pointerdown',e=>{const a=e.target.closest('.a,.wg'),b=scr.getBoundingClientRect();if(a){const q=(a.querySelector('.ic')||a).getBoundingClientRect();origin=[(q.left+q.width/2-b.left)/b.width*100,(q.top+q.height/2-b.top)/b.height*100]}ex=e.clientX-b.left<24?e.clientX:null});
-scr.addEventListener('pointerup',e=>{if(ex!=null&&e.clientX-ex>70&&!busy){const k=scr.querySelector('.ly:last-child .bk');if(k)k.click()}ex=null});
-const hi=$('#hi');let y0=0;
-hi.onpointerdown=e=>{y0=e.clientY;try{hi.setPointerCapture(e.pointerId)}catch(_){}};
-hi.onpointerup=e=>{const dy=e.clientY-y0;if(dy<-18||Math.abs(dy)<6){const c=scr.querySelector('.ly:last-child');if(c&&c.dataset.t!='home'&&!busy)home()}};
-</script>
-</body>
-</html>
